@@ -39,6 +39,7 @@ A React-based application for displaying WooCommerce product details, leveraging
 4. Create a `.env.local` file in the root of the project and add the following environment variables, replacing the placeholders with your actual WooCommerce store details:
 
     ```plaintext
+    VITE_domain=https://yourstore.com
     VITE_consumerKey=your_consumer_key
     VITE_consumerSecret=your_consumer_secret
     ```
