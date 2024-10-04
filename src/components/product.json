@@ -1,0 +1,177 @@
+{
+    "id": 13952,
+    "type": "variation",
+    "date_created": "2024-09-09T20:44:53",
+    "date_created_gmt": "2024-09-09T20:44:53",
+    "date_modified": "2024-09-09T21:01:00",
+    "date_modified_gmt": "2024-09-09T21:01:00",
+    "description": "",
+    "permalink": "https://${import.meta.env.VITE_domain}/product/dobernut-dog-pate-sausage/?attribute_quantity=Box+of+12x+400g+tubes&attribute_flavour=Beef",
+    "sku": "",
+    "global_unique_id": "",
+    "price": "47.99",
+    "regular_price": "47.99",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "status": "publish",
+    "purchasable": true,
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "tax_status": "taxable",
+    "tax_class": "",
+    "manage_stock": false,
+    "stock_quantity": null,
+    "stock_status": "instock",
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "weight": "4.8",
+    "dimensions": {
+        "length": "40",
+        "width": "14",
+        "height": "18"
+    },
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "image": {
+        "id": 13395,
+        "date_created": "2024-07-08T19:44:40",
+        "date_created_gmt": "2024-07-08T19:44:40",
+        "date_modified": "2024-07-08T19:45:02",
+        "date_modified_gmt": "2024-07-08T19:45:02",
+        "src": "https://${import.meta.env.VITE_domain}/wp-content/uploads/2024/07/beef-dog-pate-treat.webp",
+        "name": "beef dog pate treat",
+        "alt": "beef dog pate treat"
+    },
+    "attributes": [
+        {
+            "id": 0,
+            "name": "Quantity",
+            "slug": "quantity",
+            "option": "Box of 12x 400g tubes"
+        },
+        {
+            "id": 0,
+            "name": "Flavour",
+            "slug": "flavour",
+            "option": "Beef"
+        }
+    ],
+    "menu_order": 8,
+    "meta_data": [
+        {
+            "id": 217955,
+            "key": "selected_images_categories",
+            "value": "a:0:{}"
+        },
+        {
+            "id": 218114,
+            "key": "_wc_gla_sync_status",
+            "value": "synced"
+        },
+        {
+            "id": 218115,
+            "key": "_whols_price_type_2_properties",
+            "value": "any_role:38.99:3;"
+        },
+        {
+            "id": 218116,
+            "key": "wd_additional_variation_images_data",
+            "value": "13395"
+        },
+        {
+            "id": 218117,
+            "key": "_wclt_lead_time_format",
+            "value": "static"
+        },
+        {
+            "id": 218118,
+            "key": "_wclt_lead_time",
+            "value": ""
+        },
+        {
+            "id": 218119,
+            "key": "_wclt_lead_time_date",
+            "value": ""
+        },
+        {
+            "id": 218120,
+            "key": "_wc_facebook_sync_enabled",
+            "value": "yes"
+        },
+        {
+            "id": 218121,
+            "key": "fb_visibility",
+            "value": "yes"
+        },
+        {
+            "id": 218122,
+            "key": "fb_product_description",
+            "value": ""
+        },
+        {
+            "id": 218123,
+            "key": "_wc_facebook_product_image_source",
+            "value": "product"
+        },
+        {
+            "id": 218124,
+            "key": "fb_product_image",
+            "value": ""
+        },
+        {
+            "id": 218125,
+            "key": "fb_product_price",
+            "value": ""
+        },
+        {
+            "id": 218144,
+            "key": "_wc_gla_synced_at",
+            "value": "1726693504"
+        },
+        {
+            "id": 218145,
+            "key": "_wc_gla_google_ids",
+            "value": {
+                "GB": "online:en:GB:gla_13952"
+            }
+        },
+        {
+            "id": 218153,
+            "key": "fb_product_item_id",
+            "value": "6432272556897046"
+        },
+        {
+            "id": 228698,
+            "key": "_wc_gla_mc_status",
+            "value": "approved"
+        }
+    ],
+    "name": "Box of 12x 400g tubes, Beef",
+    "parent_id": 13390,
+    "_links": {
+        "self": [
+            {
+                "href": "https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/13390/variations/13952"
+            }
+        ],
+        "collection": [
+            {
+                "href": "https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/13390/variations"
+            }
+        ],
+        "up": [
+            {
+                "href": "https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/13390"
+            }
+        ]
+    }
+}
