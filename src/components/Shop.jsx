@@ -8,7 +8,7 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8; // Number of products to display per page
+  const productsPerPage = 9; // Number of products to display per page
   console.log(import.meta.env.VITE_consumerKey);
   
   
@@ -86,7 +86,7 @@ const Shop = () => {
     <div className="container mx-auto p-4">
       <h3 className="text-purple-300 font-bold text-5xl">{products.length}</h3>
       <h2 className="text-2xl font-bold text-center mb-6">Shop</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-6 gap-x-[13rem]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-6">
         {currentProducts.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}

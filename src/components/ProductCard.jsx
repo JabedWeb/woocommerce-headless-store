@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
       <div className="card-body">
         <h2 className="card-title">
           {product.name}
-          <div className="badge badge-secondary">NEW</div>
+          <div className="badge badge-secondary">{product.featured ? "FEATURED" : "NEW"}</div>
         </h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div className="card-actions justify-end">
@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
           <div className="badge badge-outline">{product.type}</div>
         </div>
         
-        <Link to={`/product/${product.id}`} className="btn btn-primary">
+        <Link to={`/product/${product.id}`} className="btn btn-primary mt-3">
           View Product
         </Link>
         
