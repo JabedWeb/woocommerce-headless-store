@@ -55,13 +55,10 @@ const SingleProduct = () => {
   const { dispatch } = useCart();
 
   const handleAddToCart = () => {
-    const newItem = {
-      id: product.id,
-      title: product.name,
-      price: parseFloat(product.price), // Ensure price is a number
-      // ...other properties
-    };
-    dispatch({ type: 'ADD_ITEM', payload: newItem });
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: { id: product.id, title: product.name, price: product.price },
+    });
     alert(`${product.name} has been added to your cart!`);
   };
 

@@ -10,6 +10,8 @@ const Checkout = () => {
   const [coupons, setCoupons] = useState([]);
 
   // Calculate total amount from items in the cart
+  console.log("state", state);
+  
   const total = state.items.reduce((acc, item) => {
     const price = parseFloat(item.price) || 0; // Ensure it's a number
     return acc + price;
