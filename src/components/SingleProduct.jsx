@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useCart } from "./cart/CartContext";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -51,6 +52,19 @@ const SingleProduct = () => {
     setSelectedVariation(variation);
   };
 
+  const { dispatch } = useCart();
+
+  const handleAddToCart = () => {
+    const newItem = {
+      id: product.id,
+      title: product.name,
+      price: parseFloat(product.price), // Ensure price is a number
+      // ...other properties
+    };
+    dispatch({ type: 'ADD_ITEM', payload: newItem });
+    alert(`${product.name} has been added to your cart!`);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
@@ -71,6 +85,7 @@ const SingleProduct = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <Link to="/checkout" className="text-blue-500">Go TO Checkout</Link>
       <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
       <div className="flex">
         <img src={currentImage} alt={product.name} className="w-1/2" />
@@ -94,7 +109,7 @@ const SingleProduct = () => {
           ))}
 
           {/* Add to Cart Button */}
-          <button 
+          <button onClick={handleAddToCart}
             className="mt-6 bg-purple-500 text-white px-4 py-2 rounded" 
             disabled={!product.purchasable || !selectedVariation}
           >
