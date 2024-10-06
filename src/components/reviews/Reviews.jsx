@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, useAnimation } from "framer-motion";
+import SkeletonLoader from "../Animation/SkeletonLoader";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -16,6 +17,7 @@ const Reviews = () => {
       try {
         const response = await axios.get(url, {
           params: {
+            page : 1,
             per_page: 100,
           },
         });
@@ -38,10 +40,10 @@ const Reviews = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-4">Product Reviews</h2>
+      <h2 className="text-3xl font-bold mb-4">Product Reviews {reviews.length}</h2>
       {reviews.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review) => (
+          {reviews.map((review,index) => (
             <motion.div
               key={review.id}
               className="border p-4 rounded-lg shadow-md"
@@ -56,7 +58,7 @@ const Reviews = () => {
                   className="w-12 h-12 rounded-full mr-2"
                 />
                 <div>
-                  <h4 className="font-semibold">{review.reviewer}</h4>
+                  <h4 className="font-semibold">{review.reviewer}-{index+1}</h4>
                   <p className="text-gray-500">{new Date(review.date_created).toLocaleDateString()}</p>
                 </div>
               </div>
@@ -74,30 +76,9 @@ const Reviews = () => {
         <p>No reviews available.</p>
       )}
     </div>
+
   );
 };
-
-// Skeleton Loader for loading state
-const SkeletonLoader = () => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Array.from({ length: 12 }).map((_, index) => (
-        <div key={index} className="border p-4 rounded-lg shadow-md animate-pulse">
-          <div className="flex items-center mb-2">
-            <div className="w-12 h-12 rounded-full bg-gray-200"></div>
-            <div className="ml-4">
-              <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 w-16 bg-gray-200 rounded"></div>
-            </div>
-          </div>
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 
 // New component to fetch and display product details
 const ProductDetails = ({ productId }) => {
