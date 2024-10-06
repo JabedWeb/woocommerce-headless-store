@@ -34,16 +34,16 @@ const Order = () => {
           page++; // Increment page number
         }
 
-        setOrders(allOrders); // Set state with all orders
+        setOrders(allOrders); 
       } catch (err) {
         console.error("Error fetching orders:", err);
-        setError("Failed to fetch orders."); // Set error message
+        setError("Failed to fetch orders."); 
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false); 
       }
     };
 
-    fetchAllOrders(); // Call the function
+    fetchAllOrders();
   }, []);
 
   // Pagination logic
@@ -87,7 +87,7 @@ const Order = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold text-center mb-6">Orders</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Orders - {orders.length}</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border table table-xs border-gray-300">
           <thead>
