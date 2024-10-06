@@ -13,33 +13,40 @@ import { CartProvider } from './components/cart/CartContext';
 import Checkout from './components/checkout/Checkout';
 import Order from './components/order/Order';
 import Customer from './components/customer/Customer';
+import Home from './components/Home/Home';
 // import Checkout from './components/checkout/Checkout';
 
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Shop/>,
-  },
-  {
-    path: "/product/:id",
-    element: <SingleProduct/>,
-  },
-  {
-    path : "/reviews",
-    element: <Reviews/>
-  },
-  {
-    path: "/checkout",
-    element: <Checkout/>,
-  },
-  {
-    path: "/orders",
-    element: <Order/>,
-  },
-  {
-    path : "/customers",
-    element: <Customer/>
+    path: '/',
+    element: <Home />,
+    children: [
+      {
+        path: "/shop",
+        element: <Shop/>,
+      },
+      {
+        path: "/product/:id",
+        element: <SingleProduct/>,
+      },
+      {
+        path : "/reviews",
+        element: <Reviews/>
+      },
+      {
+        path: "/checkout",
+        element: <Checkout/>,
+      },
+      {
+        path: "/orders",
+        element: <Order/>,
+      },
+      {
+        path : "/customers",
+        element: <Customer/>
+      }
+    ]
   }
 ]);
 createRoot(document.getElementById('root')).render(

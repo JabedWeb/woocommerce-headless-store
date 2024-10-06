@@ -13,7 +13,7 @@ const Checkout = () => {
   console.log("state", state);
   
   const total = state.items.reduce((acc, item) => {
-    const price = parseFloat(item.price) || 0; // Ensure it's a number
+    const price = parseFloat(item.price) || 0;
     return acc + price;
   }, 0);
   const discountedTotal = total - discount;
@@ -44,7 +44,7 @@ const Checkout = () => {
       const validCoupon = response.data.find(coupon => coupon.code === couponCode);
 
       if (validCoupon) {
-        setDiscount(parseFloat(validCoupon.amount)); // Ensure it's a number
+        setDiscount(parseFloat(validCoupon.amount));
       } else {
         setError('Invalid coupon code');
       }
@@ -62,7 +62,7 @@ const Checkout = () => {
           <ul>
             {state.items.map(item => (
               <li key={item.id}>
-                {item.title} - ${parseFloat(item.price).toFixed(2)} {/* Ensure price is a number */}
+                {item.title} - ${parseFloat(item.price).toFixed(2)}
               </li>
             ))}
           </ul>
