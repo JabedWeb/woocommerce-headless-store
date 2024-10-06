@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProductCard from "./ProductCard";
-import SkeletonLoader from "./Animation/SkeletonLoader";
+import SkeletonLoader from "../Animation/SkeletonLoader";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);

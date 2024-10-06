@@ -1,19 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-
-import Shop from './components/Shop'
 import './index.css'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import SingleProduct from './components/SingleProduct';
 import Reviews from './components/reviews/reviews';
 import { CartProvider } from './components/cart/CartContext';
 import Checkout from './components/checkout/Checkout';
 import Order from './components/order/Order';
 import Customer from './components/customer/Customer';
 import Home from './components/Home/Home';
+import Shop from './components/shop/Shop';
+import SingleProduct from './components/shop/SingleProduct';
 // import Checkout from './components/checkout/Checkout';
 
 
