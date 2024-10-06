@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../cart/CartContext";
+import { motion } from "framer-motion";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -83,18 +84,18 @@ const SingleProduct = () => {
   return (
     <div className="container mx-auto p-4">
       <Link to="/checkout" className="text-blue-500">Go TO Checkout</Link>
-      <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
       <div className="flex">
         <img src={currentImage} alt={product.name} className="w-1/2" />
         <div className="ml-4 w-1/2">
+        <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
           <h3 className="text-xl font-bold">Price: {currentPrice || "Contact for price"}</h3>
           <div dangerouslySetInnerHTML={{ __html: product.short_description }} />
 
           {/* Attribute-Based Variation Selection */}
           {Object.entries(attributes).map(([attrName, options]) => (
             <div key={attrName} className="mt-4">
-              <label className="font-semibold">{attrName}:</label>
-              <select onChange={(e) => handleAttributeChange(attrName, e.target.value)} defaultValue="">
+              <label className="font-semibold">{attrName}: </label>
+              <select style={{width:"300px",height:"40px"}} onChange={(e) => handleAttributeChange(attrName, e.target.value)} defaultValue="">
                 <option value="">Select {attrName}</option>
                 {[...options].map(option => (
                   <option key={option} value={option}>
@@ -106,12 +107,12 @@ const SingleProduct = () => {
           ))}
 
           {/* Add to Cart Button */}
-          <button onClick={handleAddToCart}
+          <motion.button whileHover={{scale:1.2}} onClick={handleAddToCart}
             className="mt-6 bg-purple-500 text-white px-4 py-2 rounded" 
             disabled={!product.purchasable || !selectedVariation}
           >
             Add to Cart
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>

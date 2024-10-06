@@ -1,6 +1,7 @@
 // ProductCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const ProductCard = ({ product }) => {
   return (
@@ -13,7 +14,6 @@ const ProductCard = ({ product }) => {
           {product.name}
           <div className="badge badge-secondary">{product.featured ? "FEATURED" : "NEW"}</div>
         </h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
         <div className="card-actions justify-end">
           <div className="badge badge-outline">
             {product.categories[0]?.name}
@@ -25,10 +25,14 @@ const ProductCard = ({ product }) => {
           </div>
           <div className="badge badge-outline">{product.type}</div>
         </div>
-        
-        <Link to={`/product/${product.id}`} className="btn btn-primary mt-3">
-          View Product
-        </Link>
+      
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          className="btn btn-primary mt-4"
+        >
+          <Link to={`/product/${product.id}`}>View Product</Link>
+        </motion.button>
+
         
         
       </div>
