@@ -11,6 +11,8 @@ import SingleProduct from './components/SingleProduct';
 import Reviews from './components/reviews/reviews';
 import { CartProvider } from './components/cart/CartContext';
 import Checkout from './components/checkout/Checkout';
+import Order from './components/order/Order';
+import Customer from './components/customer/Customer';
 // import Checkout from './components/checkout/Checkout';
 
 
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: "/checkout",
     element: <Checkout/>,
+  },
+  {
+    path: "/orders",
+    element: <Order/>,
+  },
+  {
+    path : "/customers",
+    element: <Customer/>
   }
 ]);
 createRoot(document.getElementById('root')).render(

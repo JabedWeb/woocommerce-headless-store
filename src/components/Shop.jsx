@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProductCard from "./ProductCard";
+import SkeletonLoader from "./Animation/SkeletonLoader";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -75,7 +76,11 @@ const Shop = () => {
   };
 
   if (loading) {
-    return <div className="text-center">Loading products...</div>;
+    return (
+      <div className="text-center">Loading products...
+       <SkeletonLoader />;
+      </div>
+    )
   }
 
   if (error) {
