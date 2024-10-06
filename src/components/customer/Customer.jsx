@@ -7,7 +7,7 @@ const Customers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const customersPerPage = 10; // Number of customers to display per page
+  const customersPerPage = 15; // Number of customers to display per page
   const [selectedCustomer, setSelectedCustomer] = useState(null); // State for selected customer
 
   useEffect(() => {
@@ -130,13 +130,15 @@ const Customers = () => {
       <h2 className="text-2xl font-bold text-center mb-6">Customers</h2>
       
       {/* Top Clients Sections */}
-      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (Last 2 Months)</h3>
+      <div className="xl:flex justify-between">
+      
       <div className="overflow-x-auto mb-6">
+      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (Last 2 Months)</h3>
         <table className="min-w-full border table table-xs border-gray-300">
           <thead>
             <tr>
               <th className="border-b px-4 py-2">Name</th>
-              <th className="border-b px-4 py-2">email</th>
+              {/* <th className="border-b px-4 py-2">email</th> */}
               <th className="border-b px-4 py-2">Total Spent</th>
               <th className="border-b px-4 py-2">Orders Count</th>
             </tr>
@@ -145,7 +147,7 @@ const Customers = () => {
             {topClients.lastTwoMonths.map(customer => (
               <tr key={customer.id}>
                 <td className="border-b px-4 py-2">{customer.name}</td>
-                <td className="border-b px-4 py-2">{customer.email}</td>
+                {/* <td className="border-b px-4 py-2">{customer.email}</td> */}
                 <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
                 <td className="border-b px-4 py-2">{customer.orderCount}</td>
               </tr>
@@ -154,36 +156,11 @@ const Customers = () => {
         </table>
       </div>
 
-      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (All Time)</h3>
-      <div className="overflow-x-auto mb-6">
+      <div className="overflow-x-auto xl:w-2/4 ">
+      <h3 className="text-xl font-semibold mb-4">Customers Table </h3>
         <table className="min-w-full border table table-xs border-gray-300">
           <thead>
             <tr>
-              <th className="border-b px-4 py-2">Name</th>
-              <th className="border-b px-4 py-2">email</th>
-              <th className="border-b px-4 py-2">Total Spent</th>
-              <th className="border-b px-4 py-2">Orders Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {topClients.allTime.map(customer => (
-              <tr key={customer.id}>
-                <td className="border-b px-4 py-2">{customer.name}</td>
-                <td className="border-b px-4 py-2">{customer.email}</td>
-                <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
-                <td className="border-b px-4 py-2">{customer.orderCount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Customers Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border table table-xs border-gray-300">
-          <thead>
-            <tr>
-              <th className="border-b px-4 py-2">Customer ID</th>
               <th className="border-b px-4 py-2">Name</th>
               <th className="border-b px-4 py-2">Total Spent</th>
               <th className="border-b px-4 py-2">Orders Count</th>
@@ -193,7 +170,6 @@ const Customers = () => {
           <tbody>
             {currentCustomers.map(customer => (
               <tr key={customer.id}>
-                <td className="border-b px-4 py-2">{customer.id}</td>
                 <td className="border-b px-4 py-2">{customer.name}</td>
                 <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
                 <td className="border-b px-4 py-2">{customer.orderCount}</td>
@@ -210,6 +186,32 @@ const Customers = () => {
           </tbody>
         </table>
       </div>
+      <div className="overflow-x-auto mb-6">
+      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (All Time)</h3>
+        <table className="min-w-full border table table-xs border-gray-300">
+          <thead>
+            <tr>
+              <th className="border-b px-4 py-2">Name</th>
+              {/* <th className="border-b px-4 py-2">email</th> */}
+              <th className="border-b px-4 py-2">Total Spent</th>
+              <th className="border-b px-4 py-2">Orders Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topClients.allTime.map(customer => (
+              <tr key={customer.id}>
+                <td className="border-b px-4 py-2">{customer.name}</td>
+                {/* <td className="border-b px-4 py-2">{customer.email}</td> */}
+                <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
+                <td className="border-b px-4 py-2">{customer.orderCount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+      {/* Customers Table */}
 
       {/* Pagination Controls */}
       <div className="flex justify-between mt-6">
@@ -232,25 +234,43 @@ const Customers = () => {
 
       {/* Customer Details Modal */}
       {selectedCustomer && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded shadow-lg p-4 max-w-lg w-full">
-            <h3 className="text-lg font-bold mb-4">Customer Details (ID: {selectedCustomer.id})</h3>
-            <h4 className="font-semibold">Total Spent: £{selectedCustomer.totalSpent.toFixed(2)}</h4>
-            <h4 className="font-semibold">Orders:</h4>
-            <ul className="mb-4">
-              {selectedCustomer.orders.map(order => (
-                <li key={order.id} className="flex justify-between">
-                  <span>Order ID: {order.id} - Date: {new Date(order.date).toLocaleDateString()}</span>
-                  <span>Total:£ {order.total}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={handleCloseDetails}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="bg-purple-500 text-black rounded shadow-lg p-4 max-w-lg w-full">
+      <h3 className="text-lg font-bold mb-4">Customer Details (Name: {selectedCustomer.name})</h3>
+      <h4 className="font-semibold">Total Spent: £{selectedCustomer.totalSpent.toFixed(2)}</h4>
+      <h4 className="font-semibold mb-2">Orders:</h4>
+      <table className="min-w-full table table-sm bg-white rounded shadow">
+        <thead>
+          <tr className="bg-purple-600 text-white">
+            <th className="py-2 px-4">Order ID</th>
+            <th className="py-2 px-4">Date</th>
+            <th className="py-2 px-4">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedCustomer.orders.map(order => (
+            <tr key={order.id} className="border-b">
+              <td className="border-b py-2 px-4">{order.id}</td>
+              <td className="border-b px-4 py-2">
+                  {new Date(order.date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </td>
+              <td className="border-b py-2 px-4">£{order.total.toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="bg-red-500 text-white px-4 py-2 rounded mt-4" onClick={handleCloseDetails}>
+        Close
+      </button>
+    </div>
+  </div>
+    )}
+
     </div>
   );
 };

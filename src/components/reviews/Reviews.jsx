@@ -59,10 +59,15 @@ const Reviews = () => {
                 />
                 <div>
                   <h4 className="font-semibold">{review.reviewer}-{index+1}</h4>
-                  <p className="text-gray-500">{new Date(review.date_created).toLocaleDateString()}</p>
+                  <p className="text-gray-500">{new Date(review.date_created).toLocaleDateString("en-US",{
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    weekday: "long",
+                  })}</p>
                 </div>
               </div>
-              <p className="mb-2">{review.review}</p>
+              <p dangerouslySetInnerHTML={{__html:review.review}} className="mb-2"/>
               <p className="font-bold">Rating: {review.rating} ⭐</p>
               {review.verified && <span className="text-green-500">Verified Purchase</span>}
               <div className="mt-4">
