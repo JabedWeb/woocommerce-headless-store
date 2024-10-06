@@ -7,7 +7,7 @@ const Customers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const customersPerPage = 20; // Number of customers to display per page
+  const customersPerPage = 10; // Number of customers to display per page
   const [selectedCustomer, setSelectedCustomer] = useState(null); // State for selected customer
 
   useEffect(() => {
@@ -36,40 +36,70 @@ const Customers = () => {
 
         // Process orders to extract customer data
         const customerMap = {};
+        const twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
         allOrders.forEach(order => {
           const customerId = order.customer_id || order.billing.email; // Use email as ID if customer_id is not available
+          const totalSpent = parseFloat(order.total);
+
+          // Update customer data
           if (!customerMap[customerId]) {
             customerMap[customerId] = {
               id: customerId,
               name: `${order.billing.first_name} ${order.billing.last_name}`,
               totalSpent: 0,
+              email: order.billing.email,
               orderCount: 0,
               orders: [],
             };
           }
-          customerMap[customerId].totalSpent += parseFloat(order.total);
+          customerMap[customerId].totalSpent += totalSpent;
           customerMap[customerId].orderCount += 1;
           customerMap[customerId].orders.push({
             id: order.id,
             date: order.date_created,
-            total: order.total,
+            total: totalSpent,
           });
         });
 
-        setCustomers(Object.values(customerMap)); // Set state with all customers
+        const customerArray = Object.values(customerMap);
+        setCustomers(customerArray); // Set state with all customers
+
+        // Calculate top 10 clients for the last 2 months
+        const topClientsLastTwoMonths = customerArray
+          .filter(customer =>
+            customer.orders.some(order => new Date(order.date) >= twoMonthsAgo)
+          )
+          .sort((a, b) => b.totalSpent - a.totalSpent)
+          .slice(0, 10);
+
+        // Calculate top 10 clients of all time
+        const topClientsAllTime = customerArray
+          .sort((a, b) => b.totalSpent - a.totalSpent)
+          .slice(0, 10);
+
+        setTopClients({
+          lastTwoMonths: topClientsLastTwoMonths,
+          allTime: topClientsAllTime,
+        });
       } catch (err) {
         console.error("Error fetching orders:", err);
-        setError("Failed to fetch orders."); // Set error message
+        setError("Failed to fetch orders."); 
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false);
       }
     };
 
-    fetchAllOrders(); // Call the function
+    fetchAllOrders();
   }, []);
 
-  // Pagination logic
+  const [topClients, setTopClients] = useState({
+    lastTwoMonths: [],
+    allTime: [],
+  });
+
+  // Pagination logic for the main customer list
   const indexOfLastCustomer = currentPage * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
   const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
@@ -98,6 +128,57 @@ const Customers = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-center mb-6">Customers</h2>
+      
+      {/* Top Clients Sections */}
+      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (Last 2 Months)</h3>
+      <div className="overflow-x-auto mb-6">
+        <table className="min-w-full border table table-xs border-gray-300">
+          <thead>
+            <tr>
+              <th className="border-b px-4 py-2">Name</th>
+              <th className="border-b px-4 py-2">email</th>
+              <th className="border-b px-4 py-2">Total Spent</th>
+              <th className="border-b px-4 py-2">Orders Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topClients.lastTwoMonths.map(customer => (
+              <tr key={customer.id}>
+                <td className="border-b px-4 py-2">{customer.name}</td>
+                <td className="border-b px-4 py-2">{customer.email}</td>
+                <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
+                <td className="border-b px-4 py-2">{customer.orderCount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 className="text-xl font-semibold mb-4">Top 10 Clients (All Time)</h3>
+      <div className="overflow-x-auto mb-6">
+        <table className="min-w-full border table table-xs border-gray-300">
+          <thead>
+            <tr>
+              <th className="border-b px-4 py-2">Name</th>
+              <th className="border-b px-4 py-2">email</th>
+              <th className="border-b px-4 py-2">Total Spent</th>
+              <th className="border-b px-4 py-2">Orders Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topClients.allTime.map(customer => (
+              <tr key={customer.id}>
+                <td className="border-b px-4 py-2">{customer.name}</td>
+                <td className="border-b px-4 py-2">{customer.email}</td>
+                <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
+                <td className="border-b px-4 py-2">{customer.orderCount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Customers Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full border table table-xs border-gray-300">
           <thead>
@@ -114,7 +195,7 @@ const Customers = () => {
               <tr key={customer.id}>
                 <td className="border-b px-4 py-2">{customer.id}</td>
                 <td className="border-b px-4 py-2">{customer.name}</td>
-                <td className="border-b px-4 py-2">${customer.totalSpent.toFixed(2)}</td>
+                <td className="border-b px-4 py-2">£{customer.totalSpent.toFixed(2)}</td>
                 <td className="border-b px-4 py-2">{customer.orderCount}</td>
                 <td className="border-b px-4 py-2">
                   <button
@@ -154,13 +235,13 @@ const Customers = () => {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white rounded shadow-lg p-4 max-w-lg w-full">
             <h3 className="text-lg font-bold mb-4">Customer Details (ID: {selectedCustomer.id})</h3>
-            <h4 className="font-semibold">Total Spent: ${selectedCustomer.totalSpent.toFixed(2)}</h4>
+            <h4 className="font-semibold">Total Spent: £{selectedCustomer.totalSpent.toFixed(2)}</h4>
             <h4 className="font-semibold">Orders:</h4>
             <ul className="mb-4">
               {selectedCustomer.orders.map(order => (
                 <li key={order.id} className="flex justify-between">
                   <span>Order ID: {order.id} - Date: {new Date(order.date).toLocaleDateString()}</span>
-                  <span>Total: ${order.total}</span>
+                  <span>Total:£ {order.total}</span>
                 </li>
               ))}
             </ul>
