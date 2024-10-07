@@ -25,12 +25,12 @@ const Ball = () => {
         style={ballStyle}
         transition={{
           y: {
-            duration: 1,
+            duration: 3,
             repeat: Infinity,
             ease: 'linear',
           },
         }}
-        animate={{ y: ['0px', '-200px'] }}
+        animate={{ y: ['0px', '-150px' ,'0px'] }}
       />
     </div>
   );
