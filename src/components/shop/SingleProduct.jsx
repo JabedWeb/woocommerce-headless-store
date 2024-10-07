@@ -1,40 +1,44 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../cart/CartContext";
 import { motion } from "framer-motion";
+import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
 
 const SingleProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [variations, setVariations] = useState([]);
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [selectedAttributes, setSelectedAttributes] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const url = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/${id}?consumer_key=${import.meta.env.VITE_consumerKey}&consumer_secret=${import.meta.env.VITE_consumerSecret}`;
+      setLoading(true);
 
-      try {
-        const response = await axios.get(url);
-        setProduct(response.data);
+      // Fetch the main product data
+      const { data: productData, error: productError } = await fetchFromWooCommerce(`products/${id}`);
+      if (productError) {
+        setError(productError);
         setLoading(false);
-
-        // Fetch variations
-        if (response.data.variations && response.data.variations.length) {
-          const variationPromises = response.data.variations.map(variationId => 
-            axios.get(`https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/${id}/variations/${variationId}?consumer_key=${import.meta.env.VITE_consumerKey}&consumer_secret=${import.meta.env.VITE_consumerSecret}`)
-          );
-          const variationsResponse = await Promise.all(variationPromises);
-          setVariations(variationsResponse.map(v => v.data));
-        }
-      } catch (err) {
-        console.error("Error fetching product:", err);
-        setError("Failed to fetch product.");
-        setLoading(false);
+        return;
       }
+      setProduct(productData);
+
+      // Check for variations if available
+      if (productData?.variations?.length) {
+        const variationPromises = productData.variations.map(variationId => 
+          fetchFromWooCommerce(`products/${id}/variations/${variationId}`)
+        );
+        
+        const variationsResponse = await Promise.all(variationPromises);
+        const variationsData = variationsResponse.map(({ data }) => data);
+        
+        setVariations(variationsData);
+      }
+
+      setLoading(false);
     };
 
     fetchProduct();
@@ -45,9 +49,7 @@ const SingleProduct = () => {
     setSelectedAttributes(updatedAttributes);
 
     const variation = variations.find(v =>
-      v.attributes.every(attr => 
-        updatedAttributes[attr.name] === attr.option
-      )
+      v.attributes.every(attr => updatedAttributes[attr.name] === attr.option)
     );
 
     setSelectedVariation(variation);
@@ -58,7 +60,11 @@ const SingleProduct = () => {
   const handleAddToCart = () => {
     dispatch({
       type: 'ADD_TO_CART',
-      payload: { id: product.id, title: product.name, price: product.price },
+      payload: {
+        id: product.id,
+        title: product.name,
+        price: selectedVariation ? selectedVariation.price : product.price,
+      },
     });
     alert(`${product.name} has been added to your cart!`);
   };
@@ -69,15 +75,14 @@ const SingleProduct = () => {
   const currentImage = selectedVariation ? selectedVariation.image.src : product.images[0]?.src;
   const currentPrice = selectedVariation ? selectedVariation.price : product.price;
 
-  // Collect unique attribute names and options
+  // Gather unique attribute names and options for variations
   const attributes = {};
-  
   variations.forEach(variation => {
     variation.attributes.forEach(attr => {
       if (!attributes[attr.name]) {
-        attributes[attr.name] = new Set(); // Initialize a set for unique options
+        attributes[attr.name] = new Set();
       }
-      attributes[attr.name].add(attr.option); // Add option to the set
+      attributes[attr.name].add(attr.option);
     });
   });
 
@@ -87,7 +92,7 @@ const SingleProduct = () => {
       <div className="flex">
         <img src={currentImage} alt={product.name} className="w-1/2" />
         <div className="ml-4 w-1/2">
-        <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
+          <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
           <h3 className="text-xl font-bold">Price: {currentPrice || "Contact for price"}</h3>
           <div dangerouslySetInnerHTML={{ __html: product.short_description }} />
 
@@ -95,7 +100,11 @@ const SingleProduct = () => {
           {Object.entries(attributes).map(([attrName, options]) => (
             <div key={attrName} className="mt-4">
               <label className="font-semibold">{attrName}: </label>
-              <select style={{width:"300px",height:"40px"}} onChange={(e) => handleAttributeChange(attrName, e.target.value)} defaultValue="">
+              <select
+                style={{ width: "300px", height: "40px" }}
+                onChange={(e) => handleAttributeChange(attrName, e.target.value)}
+                defaultValue=""
+              >
                 <option value="">Select {attrName}</option>
                 {[...options].map(option => (
                   <option key={option} value={option}>
@@ -107,9 +116,11 @@ const SingleProduct = () => {
           ))}
 
           {/* Add to Cart Button */}
-          <motion.button whileHover={{scale:1.2}} onClick={handleAddToCart}
-            className="mt-6 bg-purple-500 text-white px-4 py-2 rounded" 
-            disabled={!product.purchasable || !selectedVariation}
+          <motion.button
+            whileHover={{ scale: 1.2 }}
+            onClick={handleAddToCart}
+            className="mt-6 bg-purple-500 text-white px-4 py-2 rounded"
+            disabled={!product.purchasable || (product.variations.length > 0 && !selectedVariation)}
           >
             Add to Cart
           </motion.button>

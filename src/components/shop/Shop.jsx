@@ -1,8 +1,8 @@
 // Shop.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import ProductCard from "./ProductCard";
 import SkeletonLoader from "../Animation/SkeletonLoader";
+import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -10,54 +10,47 @@ const Shop = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 9; // Number of products to display per page
-  console.log(import.meta.env.VITE_consumerKey);
-  
-  
 
   useEffect(() => {
     const fetchAllProducts = async () => {
-      const baseUrl = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products`;
       const allProducts = [];
       let page = 1;
-      const perPage = 100; // Max number of products per request
+      const perPage = 100; // Set WooCommerce API max per page limit
 
       try {
         while (true) {
-          const response = await axios.get(baseUrl, {
-            params: {
-              consumer_key: import.meta.env.VITE_consumerKey,
-              consumer_secret: import.meta.env.VITE_consumerSecret,
-              per_page: perPage,
-              page: page,
-            },
+          const { data, error } = await fetchFromWooCommerce("products", {
+            per_page: perPage,
+            page: page,
           });
 
-          if (response.data.length === 0) break; // Exit if no more products
+          if (error) {
+            setError(error);
+            break;
+          }
 
-          allProducts.push(...response.data); // Add products to the array
-          page++; // Increment page number
+          if (data.length === 0) break; // Stop if no more products
+
+          allProducts.push(...data);
+          page++; // Increment page for the next fetch
         }
 
-        setProducts(allProducts); // Set state with all products
+        setProducts(allProducts);
       } catch (err) {
         console.error("Error fetching products:", err);
-        setError("Failed to fetch products."); // Set error message
+        setError("Failed to fetch products.");
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false);
       }
     };
 
-    fetchAllProducts(); // Call the function
+    fetchAllProducts();
   }, []);
 
   // Calculate the current products to display
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-
-  console.log('currentProducts', currentProducts);
-  
 
   // Calculate total pages
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -77,14 +70,15 @@ const Shop = () => {
 
   if (loading) {
     return (
-      <div className="text-center">Loading products...
-       <SkeletonLoader />;
+      <div className="text-center">
+        Loading products...
+        <SkeletonLoader />
       </div>
-    )
+    );
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>; // Display error message
+    return <div className="text-center text-red-500">{error}</div>;
   }
 
   return (

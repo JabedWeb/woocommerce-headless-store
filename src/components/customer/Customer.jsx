@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import SkeletonLoader from "../Animation/SkeletonLoader";
+import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -19,27 +19,25 @@ const Customers = () => {
 
   useEffect(() => {
     const fetchAllOrders = async () => {
-      const baseUrl = `https://${
-        import.meta.env.VITE_domain
-      }/wp-json/wc/v3/orders`;
+    
       const allOrders = [];
       let page = 1;
       const perPage = 100; // Max number of orders per request
 
       try {
         while (true) {
-          const response = await axios.get(baseUrl, {
-            params: {
-              consumer_key: import.meta.env.VITE_consumerKey,
-              consumer_secret: import.meta.env.VITE_consumerSecret,
-              per_page: perPage,
-              page: page,
-            },
+          const { data, error } = await fetchFromWooCommerce("orders", {
+            per_page: perPage,
+            page: page,
           });
+          if(error) {
+            setError(error);
+            break;
+          }
 
-          if (response.data.length === 0) break;
+          if (data.length === 0) break;
 
-          allOrders.push(...response.data);
+          allOrders.push(...data);
           page++;
         }
 
