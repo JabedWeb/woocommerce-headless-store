@@ -11,7 +11,7 @@ const fetchFromWooCommerce = async (endpoint, params = {}) => {
         ...params, // Additional params passed by the component
       },
     });
-    return { data: response.data, error: null };
+    return { data: response.data, headers: response.headers };
   } catch (error) {
     console.error("Error fetching data:", error);
     return { data: null, error: "Failed to fetch data." };

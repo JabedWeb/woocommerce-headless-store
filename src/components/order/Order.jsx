@@ -8,65 +8,48 @@ const Order = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 20; // Number of orders to display per page
-  const [selectedOrder, setSelectedOrder] = useState(null); // State for selected order
+  const ordersPerPage = 20;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0); // Track total orders
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const fetchOrders = async (page) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, headers } = await fetchFromWooCommerce("orders", {
+        per_page: ordersPerPage,
+        page: page,
+      });
+
+      if (!data || data.length === 0) {
+        console.warn("No orders found for the current page.");
+        setOrders([]);
+        return;
+      }
+
+      setOrders(data);
+
+      const totalOrdersCount = headers?.["x-wp-total"];
+      if (totalOrdersCount) {
+        setTotalOrders(parseInt(totalOrdersCount, 10));
+        setTotalPages(Math.ceil(totalOrdersCount / ordersPerPage));
+      } else {
+        setTotalPages(1);  // Fallback in case headers are missing
+        setTotalOrders(0);
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      setError("Failed to fetch orders.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAllOrders = async () => {
-      const allOrders = [];
-      let page = 1;
-      const perPage = 100; // Max number of orders per request
-
-      try {
-        while (true) {
-          const {data,error}=await fetchFromWooCommerce("orders",{
-            per_page:perPage,
-            page:page,
-          });
-
-          if(error){
-            setError(error);
-            break;
-          }
-
-          if (data.length === 0) break; // Exit if no more orders
-
-          allOrders.push(...data); // Add orders to the array
-          page++; // Increment page number
-        }
-        allOrders.sort(
-          (a, b) => new Date(b.date_created) - new Date(a.date_created)
-        );
-        setOrders(allOrders);
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-        setError("Failed to fetch orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllOrders();
-  }, []);
-
-  // Pagination logic
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
-
-  // Pagination controls
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+    fetchOrders(currentPage);
+  }, [currentPage]);
 
   const handleViewDetails = (order) => {
     setSelectedOrder(order);
@@ -75,6 +58,13 @@ const Order = () => {
   const handleCloseDetails = () => {
     setSelectedOrder(null);
   };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const startOrder = (currentPage - 1) * ordersPerPage + 1;
+  const endOrder = Math.min(currentPage * ordersPerPage, totalOrders);
 
   if (loading) {
     return (
@@ -87,13 +77,13 @@ const Order = () => {
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>; // Display error message
+    return <div className="text-center text-red-500">{error}</div>;
   }
 
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-center mb-6">
-        Orders - {orders.length}
+        Orders {startOrder}-{endOrder} of {totalOrders}
       </h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border table table-xs border-gray-300">
@@ -108,7 +98,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {currentOrders.map((order) => (
+            {orders.map((order) => (
               <tr key={order.id}>
                 <td className="border-b px-4 py-2">{order.id}</td>
                 <td className="border-b px-4 py-2">
@@ -139,28 +129,16 @@ const Order = () => {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={prevPage}
-          disabled={currentPage === 1}
-          className="bg-purple-500 text-white px-4 py-2 rounded"
-        >
-          Previous
-        </button>
-        <span>{`Page ${currentPage} of ${totalPages}`}</span>
-        <button
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-          className="bg-purple-500 text-white px-4 py-2 rounded"
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       {/* Order Details Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-purple-500 text-black  rounded shadow-lg p-4 max-w-lg w-full">
+          <div className="bg-purple-500 text-black rounded shadow-lg p-4 max-w-lg w-full">
             <h3 className="text-lg font-bold mb-4">
               Order Details (ID: {selectedOrder.id})
             </h3>
@@ -193,6 +171,30 @@ const Order = () => {
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+// Add the Pagination component to the same file
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+  console.log("Generated Page Numbers:", pageNumbers);
+  return (
+    <div className="flex flex-wrap gap-2 justify-center mt-6 space-x-2 overflow-x-auto px-4 py-2 bg-gray-100 rounded">
+      {pageNumbers.map((page) => (
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`px-3 py-1 rounded ${
+            page === currentPage
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
     </div>
   );
 };

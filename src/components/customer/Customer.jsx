@@ -22,7 +22,7 @@ const Customers = () => {
     
       const allOrders = [];
       let page = 1;
-      const perPage = 100; // Max number of orders per request
+      const perPage = 15; // Max number of orders per request
 
       try {
         while (true) {
