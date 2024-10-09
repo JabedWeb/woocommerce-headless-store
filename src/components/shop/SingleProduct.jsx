@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useCart } from "../cart/CartContext";
 import { motion } from "framer-motion";
 import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import ReviewSection from "../reviews/ReviewSection";
+import { useCart } from "../cart/CartContext";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -12,12 +13,12 @@ const SingleProduct = () => {
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { handleAddToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
 
-      // Fetch the main product data
       const { data: productData, error: productError } = await fetchFromWooCommerce(`products/${id}`);
       if (productError) {
         setError(productError);
@@ -26,7 +27,6 @@ const SingleProduct = () => {
       }
       setProduct(productData);
 
-      // Check for variations if available
       if (productData?.variations?.length) {
         const variationPromises = productData.variations.map(variationId => 
           fetchFromWooCommerce(`products/${id}/variations/${variationId}`)
@@ -55,17 +55,14 @@ const SingleProduct = () => {
     setSelectedVariation(variation);
   };
 
-  const { dispatch } = useCart();
-
-  const handleAddToCart = () => {
-    dispatch({
-      type: 'ADD_TO_CART',
-      payload: {
-        id: product.id,
-        title: product.name,
-        price: selectedVariation ? selectedVariation.price : product.price,
-      },
-    });
+  const addToCart = () => {
+    const cartItem = {
+      id: product.id,
+      title: product.name,
+      price: selectedVariation ? selectedVariation.price : product.price,
+      variation: selectedVariation ? selectedVariation.name : null,
+    };
+    handleAddToCart(cartItem, 1); 
     alert(`${product.name} has been added to your cart!`);
   };
 
@@ -75,7 +72,6 @@ const SingleProduct = () => {
   const currentImage = selectedVariation ? selectedVariation.image.src : product.images[0]?.src;
   const currentPrice = selectedVariation ? selectedVariation.price : product.price;
 
-  // Gather unique attribute names and options for variations
   const attributes = {};
   variations.forEach(variation => {
     variation.attributes.forEach(attr => {
@@ -87,45 +83,59 @@ const SingleProduct = () => {
   });
 
   return (
-    <div className="container mx-auto p-4">
-      <Link to="/checkout" className="text-blue-500">Go TO Checkout</Link>
-      <div className="flex">
-        <img src={currentImage} alt={product.name} className="w-1/2" />
-        <div className="ml-4 w-1/2">
-          <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
-          <h3 className="text-xl font-bold">Price: {currentPrice || "Contact for price"}</h3>
-          <div dangerouslySetInnerHTML={{ __html: product.short_description }} />
+    <div className="container mx-auto p-6 space-y-8">
+      <Link to="/checkout" className="text-blue-500 hover:text-blue-700">Go To Checkout</Link>
 
-          {/* Attribute-Based Variation Selection */}
-          {Object.entries(attributes).map(([attrName, options]) => (
-            <div key={attrName} className="mt-4">
-              <label className="font-semibold">{attrName}: </label>
-              <select
-                style={{ width: "300px", height: "40px" }}
-                onChange={(e) => handleAttributeChange(attrName, e.target.value)}
-                defaultValue=""
-              >
-                <option value="">Select {attrName}</option>
-                {[...options].map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="lg:w-1/2 flex justify-center items-center">
+          <img src={currentImage} alt={product.name} className="w-full rounded-lg shadow-lg" />
+        </div>
 
-          {/* Add to Cart Button */}
+        <div className="lg:w-1/2 space-y-4">
+          <h2 className="text-4xl font-bold ">{product.name}</h2>
+          <p className="text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: product.short_description }} />
+          <p className="text-2xl font-bold text-indigo-600">Price: ${currentPrice || "Contact for price"}</p>
+
+          <div className="flex items-center gap-4">
+            <p className="text-lg">Stock Status:</p>
+            <p className={`${product.stock_status === 'instock' ? 'text-green-500' : 'text-red-500'} font-semibold`}>
+              {product.stock_status === 'instock' ? 'In Stock' : 'Out of Stock'}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {Object.entries(attributes).map(([attrName, options]) => (
+              <div key={attrName} className="space-y-2">
+                <label className="font-semibold">{attrName}:</label>
+                <select
+                  className="w-full p-2 border border-gray-300 rounded"
+                  onChange={(e) => handleAttributeChange(attrName, e.target.value)}
+                  defaultValue=""
+                >
+                  <option value="">Select {attrName}</option>
+                  {[...options].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+
           <motion.button
-            whileHover={{ scale: 1.2 }}
-            onClick={handleAddToCart}
-            className="mt-6 bg-purple-500 text-white px-4 py-2 rounded"
+            whileHover={{ scale: 1.05 }}
+            onClick={addToCart}
+            className="w-full mt-6 bg-purple-600 text-white py-3 rounded-lg shadow hover:bg-purple-700 transition duration-300"
             disabled={!product.purchasable || (product.variations.length > 0 && !selectedVariation)}
           >
             Add to Cart
           </motion.button>
         </div>
       </div>
+
+      {/* Integrate the Review Section */}
+      <ReviewSection productId={product.id} />
     </div>
   );
 };
