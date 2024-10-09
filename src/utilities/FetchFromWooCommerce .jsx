@@ -1,5 +1,6 @@
 // src/utils/api.js
 import axios from 'axios';
+import { head } from 'framer-motion/client';
 
 const fetchFromWooCommerce = async (endpoint, params = {}) => {
   const baseUrl = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/${endpoint}`;
@@ -11,7 +12,7 @@ const fetchFromWooCommerce = async (endpoint, params = {}) => {
         ...params, // Additional params passed by the component
       },
     });
-    return { data: response.data, headers: response.headers };
+    return { data: response.data, error: null,headers: response.headers };
   } catch (error) {
     console.error("Error fetching data:", error);
     return { data: null, error: "Failed to fetch data." };
