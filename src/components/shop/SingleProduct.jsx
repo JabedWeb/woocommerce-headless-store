@@ -13,6 +13,7 @@ const SingleProduct = () => {
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null);
   const { handleAddToCart } = useCart();
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const SingleProduct = () => {
         return;
       }
       setProduct(productData);
+      setCurrentImage(productData.images[0]?.src); // Set initial image to the featured image
 
       if (productData?.variations?.length) {
         const variationPromises = productData.variations.map(variationId => 
@@ -53,13 +55,21 @@ const SingleProduct = () => {
     );
 
     setSelectedVariation(variation);
+    
+    // Update currentImage based on variation image
+    if (variation && variation.image && variation.image.src) {
+      setCurrentImage(variation.image.src);
+    } else {
+      // If no specific variation image, default to main product image
+      setCurrentImage(product.images[0]?.src);
+    }
   };
 
   const addToCart = () => {
     const cartItem = {
       id: product.id,
       title: product.name,
-      image : currentImage,
+      image: currentImage,
       price: selectedVariation ? selectedVariation.price : product.price,
       variation: selectedVariation ? selectedVariation.name : null,
     };
@@ -70,7 +80,6 @@ const SingleProduct = () => {
   if (loading) return <div className="container mx-auto">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
-  const currentImage = selectedVariation ? selectedVariation.image.src : product.images[0]?.src;
   const currentPrice = selectedVariation ? selectedVariation.price : product.price;
 
   const attributes = {};
@@ -88,10 +97,26 @@ const SingleProduct = () => {
       <Link to="/checkout" className="text-blue-500 hover:text-blue-700">Go To Checkout</Link>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-1/2 flex justify-center items-center">
-          <img src={currentImage} alt={product.name} className="w-full rounded-lg shadow-lg" />
+        {/* Image Gallery */}
+        <div className="lg:w-1/2 flex flex-col items-center">
+          {/* Main Image */}
+          <img src={currentImage} alt={product.name} className="w-full h-auto rounded-lg shadow-lg mb-4" />
+
+          {/* Thumbnails */}
+          <div className="flex gap-2 mt-4">
+            {product.images.map((image, index) => (
+              <img
+                key={index}
+                src={image.src}
+                alt={`${product.name} ${index + 1}`}
+                onClick={() => setCurrentImage(image.src)}
+                className={`w-20 h-20 object-cover rounded cursor-pointer border ${currentImage === image.src ? 'border-2 border-purple-500' : 'border-gray-300'}`}
+              />
+            ))}
+          </div>
         </div>
 
+        {/* Product Details */}
         <div className="lg:w-1/2 space-y-4">
           <h2 className="text-4xl font-bold ">{product.name}</h2>
           <p className="text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: product.short_description }} />
@@ -128,7 +153,7 @@ const SingleProduct = () => {
             whileHover={{ scale: 1.05 }}
             onClick={addToCart}
             className="w-full mt-6 bg-purple-600 text-white py-3 rounded-lg shadow hover:bg-purple-700 transition duration-300"
-            disabled={!product.purchasable || (product.variations.length > 0 && !selectedVariation)}
+            disabled={!product.purchasable || (product.variations.length > 0 && !selectedVariation) || product.stock_status !== 'instock' || product.price <= 0} 
           >
             Add to Cart
           </motion.button>
