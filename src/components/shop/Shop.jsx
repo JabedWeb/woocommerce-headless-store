@@ -10,32 +10,24 @@ const Shop = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 9; // Number of products to display per page
+  const [totalPages, setTotalPages] = useState(0); // Track the total number of pages
 
   useEffect(() => {
-    const fetchAllProducts = async () => {
-      const allProducts = [];
-      let page = 1;
-      const perPage = 100; // Set WooCommerce API max per page limit
-
+    const fetchProducts = async () => {
+      setLoading(true);
       try {
-        while (true) {
-          const { data, error } = await fetchFromWooCommerce("products", {
-            per_page: perPage,
-            page: page,
-          });
+        const { data, error,headers } = await fetchFromWooCommerce("products", {
+          per_page: productsPerPage,
+          page: currentPage,
+        });
 
-          if (error) {
-            setError(error);
-            break;
-          }
-
-          if (data.length === 0) break; // Stop if no more products
-
-          allProducts.push(...data);
-          page++; // Increment page for the next fetch
+        if (error) {
+          setError("Failed to fetch products.");
+        } else {
+          setProducts(data);
+          const totalCount = parseInt(headers['x-wp-total']); // Total number of products
+          setTotalPages(Math.ceil(totalCount / productsPerPage)); // Calculate total pages
         }
-
-        setProducts(allProducts);
       } catch (err) {
         console.error("Error fetching products:", err);
         setError("Failed to fetch products.");
@@ -44,28 +36,12 @@ const Shop = () => {
       }
     };
 
-    fetchAllProducts();
-  }, []);
+    fetchProducts();
+  }, [currentPage]);
 
-  // Calculate the current products to display
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(products.length / productsPerPage);
-
-  // Pagination controls
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+  // Change page number on button click
+  const changePage = (page) => {
+    setCurrentPage(page);
   };
 
   if (loading) {
@@ -83,23 +59,24 @@ const Shop = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h3 className="text-purple-300 font-bold text-5xl">{products.length}</h3>
       <h2 className="text-2xl font-bold text-center mb-6">Shop</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-6">
-        {currentProducts.map(product => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-7">
+        {products.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
       
       {/* Pagination Controls */}
-      <div className="flex justify-between mt-6">
-        <button onClick={prevPage} disabled={currentPage === 1} className="bg-purple-500 text-white px-4 py-2 rounded">
-          Previous
-        </button>
-        <span>{`Page ${currentPage} of ${totalPages}`}</span>
-        <button onClick={nextPage} disabled={currentPage === totalPages} className="bg-purple-500 text-white px-4 py-2 rounded">
-          Next
-        </button>
+      <div className="flex justify-center mt-6 space-x-2">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => changePage(index + 1)}
+            className={`px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-purple-600 text-white' : 'bg-gray-200 text-black'}`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="card bg-base-100 w-96 shadow-2xl">
+    <motion.div whileHover={{scale:1.05}} className="card bg-base-100 w-96 shadow-2xl">
       <figure>
         <img src={product.images[0]?.src} alt="Shoes" />
       </figure>
@@ -36,7 +36,7 @@ const ProductCard = ({ product }) => {
         
         
       </div>
-    </div>
+    </motion.div>
   );
 };
 
