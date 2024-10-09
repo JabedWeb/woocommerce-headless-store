@@ -21,7 +21,7 @@ const Header = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Link to="/cart" className="flex items-center">
+          <Link to="/checkout" className="flex items-center">
             <FaShoppingCart className="text-2xl mr-2" />
             <div className="text-sm">
               <p className="font-semibold">Items: {totalItems}</p>

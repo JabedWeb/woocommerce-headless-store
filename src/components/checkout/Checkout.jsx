@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useCart } from "../cart/CartContext";
 import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
 import CartOverview from "./CartOverview"; // Ensure CartOverview displays cart items correctly
+import ReviewSection from "../reviews/ReviewSection";
 
 const Checkout = () => {
-  const { totalPrice } = useCart();
+  const {cartItems, totalPrice } = useCart();
   const [shippingInfo, setShippingInfo] = useState({
     firstName: "",
     lastName: "",
@@ -14,6 +15,9 @@ const Checkout = () => {
     zip: "",
     country: "",
   });
+
+  console.log("Cart Items:", cartItems);
+  
   const [paymentMethod, setPaymentMethod] = useState("creditCard");
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -69,12 +73,16 @@ const Checkout = () => {
             <input type="text" name="zip" placeholder="ZIP Code" value={shippingInfo.zip} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded" />
             <input type="text" name="country" placeholder="Country" value={shippingInfo.country} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded col-span-2" />
           </form>
-
-          <CartOverview />
+          {
+            cartItems.length > 0 && (
+              cartItems.map((item) => (<ReviewSection key={item.id} productId={item.id} viewType="single" />))
+            )
+          }
         </div>
 
         {/* Right Column: Order Summary */}
         <div className="flex-1 bg-gray-800 p-6 rounded-lg shadow-md">
+        <CartOverview />
           <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
           <div className="mb-4">
             <p className="text-sm mb-1">Subtotal: ${totalPrice.toFixed(2)}</p>
@@ -112,6 +120,7 @@ const Checkout = () => {
               <li>Earn loyalty points with every order.</li>
             </ul>
           </div>
+
         </div>
       </div>
     </div>
