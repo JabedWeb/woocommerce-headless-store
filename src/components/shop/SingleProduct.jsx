@@ -33,15 +33,23 @@ const SingleProduct = () => {
         const variationPromises = productData.variations.map(variationId => 
           fetchFromWooCommerce(`products/${id}/variations/${variationId}`)
         );
-        
+        console.log("Variations Response:", variationPromises);
         const variationsResponse = await Promise.all(variationPromises);
+        console.log("Variations Response:", variationsResponse);
+        
         const variationsData = variationsResponse.map(({ data }) => data);
+
+        console.log("Variations Data:", variationsData);
+        
         
         setVariations(variationsData);
       }
 
       setLoading(false);
     };
+
+    console.log("Product ID:", product);
+    
 
     fetchProduct();
   }, [id]);
@@ -85,6 +93,10 @@ const SingleProduct = () => {
   const attributes = {};
   variations.forEach(variation => {
     variation.attributes.forEach(attr => {
+      console.log("Attribute:", attr);
+      console.log("Attributes-name:", attributes[attr.name]);
+      
+      
       if (!attributes[attr.name]) {
         attributes[attr.name] = new Set();
       }
@@ -92,9 +104,11 @@ const SingleProduct = () => {
     });
   });
 
+  console.log("Attributes:", attributes);
+  
+
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <Link to="/checkout" className="text-blue-500 hover:text-blue-700">Go To Checkout</Link>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Image Gallery */}
