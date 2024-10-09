@@ -59,11 +59,10 @@ const Checkout = () => {
   const grandTotal = totalWithDiscount + 5 + taxes;
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 rounded-lg">
+    <div className="container mx-auto p-6 bg-black rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
 
       {/* Cart Overview */}
-      <CartOverview />
 
       <div className="flex flex-col md:flex-row gap-6 mt-6">
         {/* Left Column: Address Information */}
@@ -78,10 +77,12 @@ const Checkout = () => {
             <input type="text" name="zip" placeholder="ZIP Code" value={shippingInfo.zip} onChange={handleInputChange} className="border p-2 rounded" />
             <input type="text" name="country" placeholder="Country" value={shippingInfo.country} onChange={handleInputChange} className="border p-2 rounded col-span-2" />
           </form>
+          <CartOverview />
         </div>
 
         {/* Right Column: Order Summary */}
         <div className="flex-1 bg-white p-4 rounded-lg shadow">
+      
           <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
           <p>Subtotal: ${totalPrice.toFixed(2)}</p>
           {discount > 0 && <p className="text-green-500">Discount: -${discount.toFixed(2)}</p>}
@@ -101,7 +102,9 @@ const Checkout = () => {
             <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
             <div>
               <label><input type="radio" name="paymentMethod" value="creditCard" checked={paymentMethod === "creditCard"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Credit Card</label>
+              <br />
               <label><input type="radio" name="paymentMethod" value="paypal" checked={paymentMethod === "paypal"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> PayPal</label>
+              <br />
               <label><input type="radio" name="paymentMethod" value="bankTransfer" checked={paymentMethod === "bankTransfer"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Bank Transfer</label>
             </div>
           </div>
