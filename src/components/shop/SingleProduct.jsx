@@ -67,7 +67,7 @@ const SingleProduct = () => {
     alert(`${product.name} has been added to your cart!`);
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="container mx-auto">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
   const currentImage = selectedVariation ? selectedVariation.image.src : product.images[0]?.src;
