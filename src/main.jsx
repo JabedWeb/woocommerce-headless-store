@@ -13,6 +13,7 @@ import Customer from './components/customer/Customer';
 import Home from './components/Home/Home';
 import Shop from './components/shop/Shop';
 import SingleProduct from './components/shop/SingleProduct';
+import Landing from './components/landing/Landing';
 // import Checkout from './components/checkout/Checkout';
 
 
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <Home />,
     children: [
+      {
+        path: "/",
+        element: <Landing />,
+      },
       {
         path: "/shop",
         element: <Shop/>,

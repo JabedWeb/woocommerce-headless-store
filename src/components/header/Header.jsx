@@ -10,7 +10,7 @@ const Header = () => {
     <div className="container mx-auto mb-7">
       <div className="navbar bg-base-100">
         <div className="navbar-start">
-          <a className="text-xl">Headless CMS</a>
+          <a href="/" className="text-xl">Headless CMS</a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
