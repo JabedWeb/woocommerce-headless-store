@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import SkeletonLoader from "../Animation/SkeletonLoader";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);

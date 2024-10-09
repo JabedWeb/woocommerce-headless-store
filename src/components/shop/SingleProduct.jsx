@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 import ReviewSection from "../reviews/ReviewSection";
 import { useCart } from "../cart/CartContext";
 

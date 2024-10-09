@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useCart } from "../cart/CartContext";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 import CartOverview from "./CartOverview"; // Ensure CartOverview displays cart items correctly
 import ReviewSection from "../reviews/ReviewSection";
 

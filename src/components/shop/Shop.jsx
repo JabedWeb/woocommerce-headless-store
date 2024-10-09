@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import SkeletonLoader from "../Animation/SkeletonLoader";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);

@@ -6,6 +6,10 @@ import { useCart } from "../cart/CartContext";
 const Header = () => {
   const { totalItems, totalPrice } = useCart();
 
+  const domain = import.meta.env.VITE_domain || localStorage.getItem("wooDomain");
+  const consumerKey = import.meta.env.VITE_consumerKey || localStorage.getItem("wooConsumerKey");
+  const consumerSecret = import.meta.env.VITE_consumerSecret || localStorage.getItem("wooConsumerSecret");
+
   return (
     <div className="container mx-auto mb-7">
       <div className="navbar bg-base-100">
@@ -14,10 +18,23 @@ const Header = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li><Link to="/shop">Shop</Link></li>
-            <li><Link to="/orders">Order</Link></li>
-            <li><Link to="/reviews">Review</Link></li>
-            <li><Link to="/customers">Customers</Link></li>
+            {
+              domain && consumerKey && consumerSecret ? (
+                <>
+                  <li><Link to="/shop">Shop</Link></li>
+                  <li><Link to="/orders">Order</Link></li>
+                  <li><Link to="/reviews">Review</Link></li>
+                  <li><Link to="/customers">Customers</Link></li>
+                </>
+              ) : (
+                null
+              )
+            }
+            {!domain || !consumerKey || !consumerSecret ? (
+              <li><Link to="/login">Login</Link></li>
+            ) : (
+              null
+            )}
           </ul>
         </div>
         <div className="navbar-end">

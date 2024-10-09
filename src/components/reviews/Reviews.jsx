@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import SkeletonLoader from "../Animation/SkeletonLoader";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -11,17 +12,21 @@ const Reviews = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchReviews = async (page = 1) => {
-    const url = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/reviews?consumer_key=${import.meta.env.VITE_consumerKey}&consumer_secret=${import.meta.env.VITE_consumerSecret}`;
-    setLoading(true);
+    // const url = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/reviews?consumer_key=${import.meta.env.VITE_consumerKey}&consumer_secret=${import.meta.env.VITE_consumerSecret}`;
+    // setLoading(true);
+  
+
     try {
-      const response = await axios.get(url, {
-        params: {
-          page: page,
-          per_page: 6, // Show 6 reviews per page
-        },
+      const { data, error,headers } = await fetchFromWooCommerce("products/reviews?", {
+        per_page: 6,
+        page: page,
       });
-      setReviews(response.data);
-      setTotalPages(Math.ceil(response.headers['x-wp-totalpages'])); // Fetch the total pages from headers
+      if (error) {
+        setError("Failed to fetch reviews.");
+      } else {
+        setReviews(data);
+        setTotalPages(Math.ceil(headers['x-wp-totalpages'])); // Fetch the total pages from headers
+      }
       setLoading(false);
     } catch (err) {
       console.error("Error fetching reviews:", err);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SkeletonLoader from "../Animation/SkeletonLoader";
 import Ball from "../Animation/Ball";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);

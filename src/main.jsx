@@ -14,7 +14,7 @@ import Home from './components/Home/Home';
 import Shop from './components/shop/Shop';
 import SingleProduct from './components/shop/SingleProduct';
 import Landing from './components/landing/Landing';
-// import Checkout from './components/checkout/Checkout';
+import WooCommerceSetup from './components/isSetup/WooCommerceSetup';
 
 
 const router = createBrowserRouter([
@@ -49,6 +49,10 @@ const router = createBrowserRouter([
       {
         path : "/customers",
         element: <Customer/>
+      },
+      {
+        path: "/login",
+        element: <WooCommerceSetup />,
       }
     ]
   }

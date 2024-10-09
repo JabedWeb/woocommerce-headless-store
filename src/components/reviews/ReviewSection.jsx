@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import Slider from "react-slick";
-import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
+import fetchFromWooCommerce from "../../utilities/FetchFromWooCommerce";
 
 const RatingStars = ({ rating }) => (
   <div className="flex items-center space-x-1">
