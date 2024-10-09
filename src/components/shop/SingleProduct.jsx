@@ -59,6 +59,7 @@ const SingleProduct = () => {
     const cartItem = {
       id: product.id,
       title: product.name,
+      image : currentImage,
       price: selectedVariation ? selectedVariation.price : product.price,
       variation: selectedVariation ? selectedVariation.name : null,
     };
