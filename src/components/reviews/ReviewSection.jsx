@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
-import Slider from "react-slick"; 
+import Slider from "react-slick";
 import fetchFromWooCommerce from "../../utilities/fetchFromWooCommerce ";
 
 const RatingStars = ({ rating }) => (
   <div className="flex items-center space-x-1">
     {[...Array(5)].map((_, index) => (
-      <FaStar key={index} className={`${index < rating ? 'text-green-500' : 'text-gray-300'}`} />
+      <FaStar
+        key={index}
+        className={`${index < rating ? "text-green-500" : "text-gray-300"}`}
+      />
     ))}
   </div>
 );
@@ -19,14 +22,19 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
   const fetchReviews = async (pageNumber = 1) => {
     try {
       setLoading(true);
-      const { data, error } = await fetchFromWooCommerce(`products/reviews?per_page=100&page=${pageNumber}`);
+      const { data, error } = await fetchFromWooCommerce(
+        `products/reviews?per_page=100&page=${pageNumber}`
+      );
       if (error) {
         setError("Error fetching reviews");
       } else {
-        const filteredReviews = data.filter((review) => review.product_id === productId);
+        const filteredReviews = data.filter(
+          (review) => review.product_id === productId
+        );
         setReviews((prevReviews) => {
           const newReviews = filteredReviews.filter(
-            (newReview) => !prevReviews.some((prevReview) => prevReview.id === newReview.id)
+            (newReview) =>
+              !prevReviews.some((prevReview) => prevReview.id === newReview.id)
           );
           return [...prevReviews, ...newReviews];
         });
@@ -54,9 +62,12 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
   }
 
   console.log(reviews);
-  
 
-  const averageRating = reviews.length ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : 0;
+  const averageRating = reviews.length
+    ? (
+        reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      ).toFixed(1)
+    : 0;
 
   const sliderSettings = {
     dots: true,
@@ -70,27 +81,37 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
         breakpoint: 1024,
         settings: {
           slidesToShow: viewType === "carousel" ? 2 : 1,
-        }
+        },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
   return (
-    <div className={`mt-12 ${viewType === "carousel" ? "bg-black text-white p-6 rounded-lg shadow-lg" : ""}`}>
+    <div
+      className={`mt-12 ${
+        viewType === "carousel"
+          ? "bg-black text-white p-6 rounded-lg shadow-lg"
+          : ""
+      }`}
+    >
       <div className="flex flex-col items-center mb-8">
         <p className="text-3xl font-semibold">Excellent</p>
         <div className="flex items-center my-2">
           <RatingStars rating={Math.round(averageRating)} />
-          <span className="ml-2 text-gray-400 text-lg">Based on {reviews.length} reviews</span>
+          <span className="ml-2 text-gray-400 text-lg">
+            Based on {reviews.length} reviews
+          </span>
         </div>
         <FaCheckCircle className="text-green-500 mt-1" size={24} />
-        <h2 className="mt-3 text-2xl text-purple-400 font-bold">{reviews[0].product_name}</h2>
+        <h2 className="mt-3 text-2xl text-purple-400 font-bold">
+          {reviews[0].product_name}
+        </h2>
       </div>
 
       {viewType === "carousel" ? (
@@ -104,28 +125,44 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
                     <FaCheckCircle className="mr-1" /> Verified
                   </span>
                 </div>
-                <p dangerouslySetInnerHTML={{ __html: review.review }} className="font-semibold text-white mb-2"/>
+                <p
+                  dangerouslySetInnerHTML={{ __html: review.review }}
+                  className="font-semibold text-white mb-2"
+                />
                 <p className="text-gray-400 text-sm mb-1">{review.reviewer}</p>
-                <p className="text-gray-500 text-xs">{new Date(review.date_created).toLocaleDateString()}</p>
+                <p className="text-gray-500 text-xs">
+                  {new Date(review.date_created).toLocaleDateString()}
+                </p>
               </div>
             </div>
           ))}
         </Slider>
       ) : (
-        <div className="space-y-4">
-          {reviews.map((review) => (
-            <div key={review.id} className="bg-gray-800 p-6 rounded-lg shadow-md mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <RatingStars rating={review.rating} />
-                <span className="text-xs text-green-500 flex items-center">
-                  <FaCheckCircle className="mr-1" /> Verified
-                </span>
+        <div className="device" style={{maxWidth:"700px"}} >
+          <Slider {...sliderSettings} className="md:mx-10 lg:mx-20">
+            {reviews.map((review) => (
+              <div key={review.id} className="p-4">
+                <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <RatingStars rating={review.rating} />
+                    <span className="text-xs text-green-500 flex items-center">
+                      <FaCheckCircle className="mr-1" /> Verified
+                    </span>
+                  </div>
+                  <p
+                    dangerouslySetInnerHTML={{ __html: review.review }}
+                    className="font-semibold text-white mb-2"
+                  />
+                  <p className="text-gray-400 text-sm mb-1">
+                    {review.reviewer}
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    {new Date(review.date_created).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-              <p dangerouslySetInnerHTML={{ __html: review.review }} className="font-semibold text-white mb-2"/>
-              <p className="text-gray-400 text-sm mb-1">{review.reviewer}</p>
-              <p className="text-gray-500 text-xs">{new Date(review.date_created).toLocaleDateString()}</p>
-            </div>
-          ))}
+            ))}
+          </Slider>
         </div>
       )}
     </div>
