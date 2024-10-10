@@ -2,7 +2,7 @@ import React from 'react'
 
 const SkeletonLoader = () => {
     return (
-      <div className=" container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className=" container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {Array.from({ length: 12 }).map((_, index) => (
           <div key={index} className="border p-4 rounded-lg shadow-md animate-pulse">
             <div className="flex items-center mb-2">
