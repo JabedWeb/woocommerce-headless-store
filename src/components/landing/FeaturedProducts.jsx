@@ -13,7 +13,7 @@ const FeaturedProducts = () => {
       try {
         
         const { data, error } = await fetchFromWooCommerce("products",{
-            per_page: 6,
+            per_page: 4,
         });
         if (error) {
           console.log("Failed to fetch products.");
@@ -40,11 +40,9 @@ const FeaturedProducts = () => {
             <h2 className="text-3xl font-semibold">Featured Products</h2>
             )
      }
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <motion.div key={product.id} whileHover={{ scale: 1.05 }}>
-            <ProductCard product={product} />
-          </motion.div>
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

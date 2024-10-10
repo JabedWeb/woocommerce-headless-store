@@ -39,13 +39,13 @@ const Categories = () => {
         {categories.map((category) => (
           <motion.div
             key={category.id}
-            className="p-6 bg-gray-800 rounded-lg text-white"
+            className=" bg-gray-800 rounded-lg text-white"
             whileHover={{ scale: 1.05 }}
           >
             <img
               src={category.image?.src}
               alt={category.name}
-              className="w-full h-24 object-cover mb-2 rounded-lg"
+              className="w-full h-50 object-cover mb-2 rounded-lg"
             />
             <h3 className="text-lg font-semibold">{category.name}</h3>
           </motion.div>

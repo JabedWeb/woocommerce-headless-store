@@ -9,7 +9,7 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9; // Number of products to display per page
+  const productsPerPage = 8; // Number of products to display per page
   const [totalPages, setTotalPages] = useState(0); // Track the total number of pages
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const Shop = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-center mb-6">Shop</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}
