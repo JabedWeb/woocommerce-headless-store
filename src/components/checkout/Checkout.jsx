@@ -104,8 +104,9 @@ const Checkout = () => {
             <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
             <div className="flex flex-col space-y-2">
               <label><input type="radio" name="paymentMethod" value="creditCard" checked={paymentMethod === "creditCard"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Credit Card</label>
-              <label><input type="radio" name="paymentMethod" value="paypal" checked={paymentMethod === "paypal"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> PayPal</label>
+              <label><input type="radio" name="paymentMethod" value="stripe" checked={paymentMethod === "stripe"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Stripe</label>
               <label><input type="radio" name="paymentMethod" value="bankTransfer" checked={paymentMethod === "bankTransfer"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Bank Transfer</label>
+              <label><input type="radio" name="paymentMethod" value="cashOnDelivery" checked={paymentMethod === "cashOnDelivery"} onChange={(e) => setPaymentMethod(e.target.value)} className="mr-2" /> Cash on Delivery</label>
             </div>
           </div>
 

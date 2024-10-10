@@ -21,7 +21,7 @@ const WooCommerceSetup = () => {
   };
 
   return (
-    <div className="setup-container container mx-auto">
+    <div className="setup-container p-3 container mx-auto">
       <h2>WooCommerce Setup</h2>
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <input
