@@ -54,14 +54,11 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
     fetchReviews();
   }, [productId]);
 
-  // if (loading && reviews.length === 0) return <p>Loading reviews...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   if (reviews.length === 0) {
-    return <p className="text-gray-500"></p>;
+    return <p className="text-gray-500">No reviews available.</p>;
   }
-
-  console.log(reviews);
 
   const averageRating = reviews.length
     ? (
@@ -114,7 +111,26 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
         </h2>
       </div>
 
-      {viewType === "carousel" ? (
+      {reviews.length === 1 ? (
+        <div className="p-4">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="flex items-center justify-between mb-2">
+              <RatingStars rating={reviews[0].rating} />
+              <span className="text-xs text-green-500 flex items-center">
+                <FaCheckCircle className="mr-1" /> Verified
+              </span>
+            </div>
+            <p
+              dangerouslySetInnerHTML={{ __html: reviews[0].review }}
+              className="font-semibold text-white mb-2"
+            />
+            <p className="text-gray-400 text-sm mb-1">{reviews[0].reviewer}</p>
+            <p className="text-gray-500 text-xs">
+              {new Date(reviews[0].date_created).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      ) : viewType === "carousel" ? (
         <Slider {...sliderSettings} className="md:mx-10 lg:mx-20">
           {reviews.map((review) => (
             <div key={review.id} className="p-4">
@@ -138,7 +154,7 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
           ))}
         </Slider>
       ) : (
-        <div className="device" style={{maxWidth:"700px"}} >
+        <div className="device" style={{ maxWidth: "700px" }}>
           <Slider {...sliderSettings} className="md:mx-10 lg:mx-20">
             {reviews.map((review) => (
               <div key={review.id} className="p-4">
