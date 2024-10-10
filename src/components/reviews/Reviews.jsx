@@ -12,10 +12,6 @@ const Reviews = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchReviews = async (page = 1) => {
-    // const url = `https://${import.meta.env.VITE_domain}/wp-json/wc/v3/products/reviews?consumer_key=${import.meta.env.VITE_consumerKey}&consumer_secret=${import.meta.env.VITE_consumerSecret}`;
-    // setLoading(true);
-  
-
     try {
       const { data, error,headers } = await fetchFromWooCommerce("products/reviews?", {
         per_page: 6,
@@ -106,14 +102,9 @@ const ProductDetails = ({ productId }) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const url = `https://${
-        import.meta.env.VITE_domain
-      }/wp-json/wc/v3/products/${productId}?consumer_key=${
-        import.meta.env.VITE_consumerKey
-      }&consumer_secret=${import.meta.env.VITE_consumerSecret}`;
       try {
-        const response = await axios.get(url);
-        setProduct(response.data);
+        const { data } = await fetchFromWooCommerce(`products/${productId}`);
+        setProduct(data);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching product details:", err);
@@ -131,7 +122,7 @@ const ProductDetails = ({ productId }) => {
         alt={product.name}
         className="w-16 h-16 mr-2 rounded"
       />
-      <a href={product.permalink} className="text-blue-500 underline">
+      <a href={`/product/${product.id}`} className="text-blue-500 underline">
         {product.name}
       </a>
     </div>
