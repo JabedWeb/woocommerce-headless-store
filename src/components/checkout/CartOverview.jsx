@@ -20,7 +20,7 @@ const CartOverview = () => {
           return (
             <div
               key={item.id}
-              className="flex justify-between items-center mb-4 border-b pb-2"
+              className="md:flex justify-between items-center mb-4 border-b pb-2"
             >
               <div>
                 <div className="relative w-14 h-14">

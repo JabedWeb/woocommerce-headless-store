@@ -65,12 +65,12 @@ const Checkout = () => {
         <div className="flex-1 bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Shipping Information</h2>
           <form className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <input type="text" name="firstName" placeholder="First Name" value={shippingInfo.firstName} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded" />
-            <input type="text" name="lastName" placeholder="Last Name" value={shippingInfo.lastName} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded" />
+            <input type="text" name="firstName" placeholder="First Name" value={shippingInfo.firstName} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 max-sm:col-span-2 p-2 rounded" />
+            <input type="text" name="lastName" placeholder="Last Name" value={shippingInfo.lastName} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 max-sm:col-span-2 p-2 rounded" />
             <input type="email" name="email" placeholder="Email" value={shippingInfo.email} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded col-span-2" />
             <input type="text" name="address" placeholder="Address" value={shippingInfo.address} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded col-span-2" />
-            <input type="text" name="city" placeholder="City" value={shippingInfo.city} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded" />
-            <input type="text" name="zip" placeholder="ZIP Code" value={shippingInfo.zip} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded" />
+            <input type="text" name="city" placeholder="City" value={shippingInfo.city} onChange={handleInputChange} className="bg-gray-700 max-sm:col-span-2 border border-gray-600 p-2 rounded" />
+            <input type="text" name="zip" placeholder="ZIP Code" value={shippingInfo.zip} onChange={handleInputChange} className="bg-gray-700 max-sm:col-span-2 border border-gray-600 p-2 rounded" />
             <input type="text" name="country" placeholder="Country" value={shippingInfo.country} onChange={handleInputChange} className="bg-gray-700 border border-gray-600 p-2 rounded col-span-2" />
           </form>
           {
