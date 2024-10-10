@@ -106,7 +106,7 @@ const ReviewSection = ({ productId, viewType = "carousel" }) => {
           </span>
         </div>
         <FaCheckCircle className="text-green-500 mt-1" size={24} />
-        <h2 className="mt-3 text-2xl text-purple-400 font-bold">
+        <h2 className="mt-3 max-sm:text-center text-2xl text-purple-400 font-bold">
           {reviews[0].product_name}
         </h2>
       </div>
